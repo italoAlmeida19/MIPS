@@ -6,10 +6,7 @@
  	.space 80 #array de 20 inteiros
  .text 
  	.main:    #codigo principal
- 	
- 	la $a0, myArray #Coloca a primeira posição do vetor dentro do parametro a0
- 	li $a1, 20	#Coloca o tamanho do vetor dentro do parametro a1
- 	
+ 	 	
  	#carrega alguns valores
  	li $s0, 15
  	li $t0, 4
@@ -24,7 +21,20 @@
  	sw $t2, myArray($t2)
  	sw $t3, myArray($t3)
 
- 	#chama função imprime 
+ 	#chama função imprime para vetor com alguns valores 
+ 	la $a0, myArray #Coloca a primeira posição do vetor dentro do parametro a0
+ 	li $a1, 20	#Coloca o tamanho do vetor dentro do parametro a1
+ 	jal imprime
+ 	
+	#chama função p zerar vetor
+ 	li $t0, 80               #local da ultima posição do vetor
+ 	la $a1, myArray($t0)     #endereço para a ultima posição 
+ 	la $a0, myArray		 #Coloca a primeira posição do vetor dentro do parametro a0
+ 	jal zeraVetor
+ 	
+ 	#chama função imprime para vetor zerado
+ 	la $a0, myArray 	#Coloca a primeira posição do vetor dentro do parametro a0
+ 	li $a1, 20		#Coloca o tamanho do vetor dentro do parametro a1
  	jal imprime
  	
  	#Finaliza programa 
@@ -49,5 +59,22 @@
 				addi $t1, $t1, 4      #anda a variavel de controle 
 				
 				blt $t1, $t2, while   #se i > tamBytesVetor quebra o loop
-				jr $ra   	    #Volta pra quem chamou
+				
+				li $v0, 4             # Qubra de linha
+				la $a0, newline        
+				syscall
+				
+				jr $ra   	      #Volta pra quem chamou
+	
+	zeraVetor:  #função de zerar vetor
+		move $t0, $a0  #guada primeira posição endereço
+		move $t1, $a1  #guarda ultima posição endereço
+		whileZera:
+			bgt $t0, $t1, fim  #posicao inicial > posição final ? caso afirmativo pular para fim 
+			sw $zero, 0($t0)   #coloca 0 na vet[atual]
+			addi $t0, $t0, 4   #avança para proximo elemento do vetor 
+			j whileZera	   #pula para whileZera
+		fim:
+		jr $ra		           #Volta pra quem chamou
+	
 	
