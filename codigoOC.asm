@@ -33,21 +33,21 @@
  	
  	
  	imprime:  #função de imprime vetor
- 		move $s0, $a0  #Coloca o endereço do vetor que veio por parâmetro dentro de $s0
- 		li  $s1, 0     # i = 0 dentro de $s1
- 		sll $s2, $a1, 2  #Coloca o tamanho do vetor em bytes dentro de $t2
+ 		move $t0, $a0  #Coloca o endereço do vetor que veio por parâmetro dentro de $t0
+ 		li  $t1, 0     # i = 0 dentro de $t1
+ 		sll $t2, $a1, 2  #Coloca o tamanho do vetor em bytes dentro de $t2
  			while:
 				li $v0, 1          	#Imprimir inteiro
-				lw $a0, 0($s0)          #Coloca o valor de vet[i] dentro de a0 p imprimir 
+				lw $a0, 0($t0)          #Coloca o valor de vet[i] dentro de a0 p imprimir 
 				syscall          	#imprime 
 				
 				li $v0, 4       	# Espaço entre elementos
 				la $a0, newSpace        
 				syscall
 				
-				addi $s0, $s0, 4      #anda 1 posição no vetor
-				addi $s1, $s1, 4      #anda a variavel de controle 
+				addi $t0, $t0, 4      #anda 1 posição no vetor
+				addi $t1, $t1, 4      #anda a variavel de controle 
 				
-				blt $s1, $s2, while   #se i > tamBytesVetor quebra o loop
+				blt $t1, $t2, while   #se i > tamBytesVetor quebra o loop
 				jr $ra   	    #Volta pra quem chamou
 	
