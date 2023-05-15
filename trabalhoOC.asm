@@ -6,64 +6,19 @@
  	.space 80	#array de 20 inteiros
  .text 
  	#AVISO AVISO AVISO
- 	#O MAIN NAO ESTÁ PRONTO CORRETAMENTE, ELE ESTÁ FEITO DE FORMA QUE RODE PARA TESTAR AS FUNÇÕES
+ 	#O MAIN NAO ESTÁ PRONTO CORRETAMENTE, ELE ESTÁ FEITO DE FORMA QUE RODE PARA TESTAR AS FUNÇÕES, NESSE CASO A INICIALIZAVETOR
  	
  	.main:  
- 	 	
- 	#carrega alguns valores
- 	li $s0, 15
- 	li $t0, 4
-  	li $t1, 8
-   	li $t2, 12
-    	li $t3, 16
-    	
-    	
-    	#poe essses valores dentro do vetor 
-    	sw $s0, myArray($zero)
- 	sw $t0, myArray($t0)
- 	sw $t1, myArray($t1)
- 	sw $t2, myArray($t2)
- 	sw $t3, myArray($t3)
-
-
- 	#chama função imprime para vetor com alguns valores 
- 	la $a0, myArray #Coloca a primeira posição do vetor dentro do parametro a0
- 	li $a1, 20	#Coloca o tamanho do vetor dentro do parametro a1
- 	jal imprime
- 	
- 	
-	#chama função p zerar vetor
- 	li $t0, 80               #local da ultima posição do vetor
- 	la $a1, myArray($t0)     #endereço para a ultima posição 
- 	la $a0, myArray		 #Coloca a primeira posição do vetor dentro do parametro a0
- 	jal zeraVetor
- 	
- 	
- 	#chama função imprime para vetor zerado
- 	la $a0, myArray 	#Coloca a primeira posição do vetor dentro do parametro a0
- 	li $a1, 20		#Coloca o tamanho do vetor dentro do parametro a1
- 	jal imprime
-
-	#chama função troca para valores vet[0] e vet[1]
-	la $a0, myArray($t0)
-	la $a1, myArray($t1)
-	jal troca	
+ 	la $a0, myArray  #vetor
+	li $a1, 20
+	li $a2, 71  
 	
- 	#carrega parametros pra funçao numeroAleatorio
- 	li $a0, 10
- 	li $a1, 15
- 	li $a2, 20
- 	li $a3, 25
- 	li $t0, 30	
- 				#coloca quarto parametro na pilha 
- 	addi $sp , $sp , -4 	# Ajusta a pilha
-	sw $t0 , 0( $sp ) 	# Salva $t0 na pilha
+	jal inicializaVetor
 	
- 	jal numeroAleatorio
- 	
- 	move $s4, $v0  		#guarda em s4 o resultado da função 
- 	addi $sp , $sp , 4      # Ajusta a pilha
- 	
+	la $a0, myArray  #vetor
+	li $a1, 20
+	jal imprime 
+
  	#Finaliza programa 
  	li $v0, 10 
  	syscall 
@@ -130,22 +85,74 @@
 		fim1:
 		jr $ra
 		
-		# ATENÇÃO IMCOMPLETO, VOU FAZER HJ A NOITE
+		# ATENÇÃO IMCOMPLETO
 	inicializaVetor:
-		move $t0, $a0
-		move $t1, $a1
-		move $t2, $a2
+		#Salvo na pilha todos os S que irei usar na função e o ra
+		addi $sp, $sp, -16	
+		sw $s0, 0($sp)
+		sw $s1, 4($sp) 
+		sw $s2, 8($sp) 
+		sw $ra, 12($sp)     
 		
-		bgt, $t1, $zero, prox
+		move $s1, $a0  #vetor
+		move $s2, $a1  #tamanho n 
+		move $t2, $a2  #ultimo valor INT 
+		
+		bgt, $s2, $zero, prox	#verifica se tamanho >=0
+		
+		#Recupera informações da pilha para poder retornar para quem chamou 
+		lw $s0, 0($sp)
+		lw $s1, 4($sp) 
+		lw $s2, 8($sp) 
+		lw $ra, 12($sp) 
+		addi $sp, $sp, 16
 		li $v0, 0
 		jr $ra		
 		
 		prox:
-				
-	
+			move $a0, $t2  #Carrega parametros
+			li $a1, 47
+			li $a2, 97
+			li $a3, 337
+			li $t3, 3 
+			addi $sp , $sp , -4  #poe quinto parametro na pilha 
+			sw $t3 , 0( $sp ) 
+			
+			jal numeroAleatorio  #chama a funcao
+			move $s0, $v0  #resultado em s0
+			addi $sp , $sp , 4 #corrige pilha 
+			
+			
+			sll $t4, $s2, 2   #n *4
+			add $t0, $s1, $t4 #pulo pra ultima posição do vetor disponivel
+			sw $s0, 0($t0)    #coloco o resultado do a0 nessa posição 
+			sub  $s1, $s1, $t4 #volto pro inicio
+			
+			#Carrega parametros
+			move $a0, $s1  #vetor
+			addi $s2,$s2, -1   
+			move $a1, $s2  #tamanho n -1
+			move $a2, $s0  #novo valor do s0
+		
+			jal inicializaVetor 
+			move $t5 , $v0  #resultado da recursao 
+			
+			
+			add $v0, $s0, $t5   #soma novo valor + resultado da recursão
+			
+			
+			#Recupera informações da pilha para poder retornar para quem chamou 
+			lw $s0, 0($sp)
+			lw $s1, 4($sp) 
+			lw $s2, 8($sp) 
+			lw $ra, 12($sp) 
+			addi $sp, $sp, 16
+			
+			jr $ra    # volta p quem chamou 
+			
 		
 		# ATENÇÃO IMCOMPLETO, VOU FAZER HJ A NOITE		
-	ordenaVetor:
+ 	ordenaVetor:
 		move $t0, $a0 #vetor[]
 		move $t1, $a1 # int n
 		li $t2, 0 # i = 0
@@ -157,5 +164,4 @@
 				
 			addi $t2, $t2, 1
 			j LACO1
-			
 					
