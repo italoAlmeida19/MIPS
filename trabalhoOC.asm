@@ -1,4 +1,5 @@
 .data
+ 	size: 20
  	newline: .asciiz "\n"
  	newSpace: .asciiz " "
  	myArray:
@@ -9,14 +10,28 @@
  	#O MAIN NAO ESTÁ PRONTO CORRETAMENTE, ELE ESTÁ FEITO DE FORMA QUE RODE PARA TESTAR AS FUNÇÕES, NESSE CASO A INICIALIZAVETOR
  	
  	.main:  
- 	la $a0, myArray  #vetor
-	li $a1, 20
+ 	
+ 	#Carrega parâmetros
+ 	la $a0, myArray  
+	lw $a1, size
 	li $a2, 71  
 	
+	#Inicializa vetor 
 	jal inicializaVetor
 	
-	la $a0, myArray  #vetor
-	li $a1, 20
+	#imprime resultado da soma que veio do inicializaVetor 
+	move $a0, $v0 		#Pega resultado da soma 
+	li $v0, 1          	
+	syscall 
+	
+	# Qubra de linha (apenas visual)
+	li $v0, 4             
+	la $a0, newline        
+	syscall
+	
+	#imprime vetor 
+	la $a0, myArray 
+	lw $a1, size
 	jal imprime 
 
  	#Finaliza programa 
@@ -85,7 +100,7 @@
 		fim1:
 		jr $ra
 		
-		# ATENÇÃO IMCOMPLETO
+
 	inicializaVetor:
 		#Salvo na pilha todos os S que irei usar na função e o ra
 		addi $sp, $sp, -16	
@@ -110,7 +125,8 @@
 		jr $ra		
 		
 		prox:
-			move $a0, $t2  #Carrega parametros
+			#Carrega parametros
+			move $a0, $t2  
 			li $a1, 47
 			li $a2, 97
 			li $a3, 337
@@ -118,28 +134,31 @@
 			addi $sp , $sp , -4  #poe quinto parametro na pilha 
 			sw $t3 , 0( $sp ) 
 			
-			jal numeroAleatorio  #chama a funcao
-			move $s0, $v0  #resultado em s0
+			#gera numero aleatorio 
+			jal numeroAleatorio 
+			move $s0, $v0  #poe o numeroAleatorio em s0
 			addi $sp , $sp , 4 #corrige pilha 
 			
 			
+			#coloca o numero aleatorio na ultila posição do vetor 
+			addi $s2,$s2, -1  #n - 1 
 			sll $t4, $s2, 2   #n *4
-			add $t0, $s1, $t4 #pulo pra ultima posição do vetor disponivel
-			sw $s0, 0($t0)    #coloco o resultado do a0 nessa posição 
-			sub  $s1, $s1, $t4 #volto pro inicio
+			add $s1, $s1, $t4 #pulo pra ultima posição do vetor disponivel
+			sw $s0, 0($s1)    #coloco o resultado do a0 nessa posição 
+			sub  $s1, $s1, $t4 #volto o ponteiro do vetor pro inicio
 			
-			#Carrega parametros
+			
+			#Carrega parametros para chamar denovo a funçaõ
 			move $a0, $s1  #vetor
-			addi $s2,$s2, -1   
-			move $a1, $s2  #tamanho n -1
-			move $a2, $s0  #novo valor do s0
+			move $a1, $s2  #tamanho n
+			move $a2, $s0  #numero aleatorio gerado nessa chamada 
 		
+			#recursao 
 			jal inicializaVetor 
+			
 			move $t5 , $v0  #resultado da recursao 
-			
-			
-			add $v0, $s0, $t5   #soma novo valor + resultado da recursão
-			
+			add $v0, $s0, $t5   #soma numero aleatorio dessa chamada + resultado da recursão
+
 			
 			#Recupera informações da pilha para poder retornar para quem chamou 
 			lw $s0, 0($sp)
@@ -147,21 +166,9 @@
 			lw $s2, 8($sp) 
 			lw $ra, 12($sp) 
 			addi $sp, $sp, 16
-			
-			jr $ra    # volta p quem chamou 
-			
-		
-		# ATENÇÃO IMCOMPLETO, VOU FAZER HJ A NOITE		
- 	ordenaVetor:
-		move $t0, $a0 #vetor[]
-		move $t1, $a1 # int n
-		li $t2, 0 # i = 0
-		addi $t3, $t2, 1 # j = i + 1
-		addi $t4, $t3, -1 # n - 1
-		LACO1: bge, $t2, $t4, proxIf
-			move $t5, $t2
-			LACO2: bge $t3, $t1, fimLoops
-				
-			addi $t2, $t2, 1
-			j LACO1
-					
+
+			jr $ra    # volta p quem chamou
+	
+	#ATENÇÃO !!! 		
+	#FUNÇÃO DE ORDENAR VETOR ESTA NO OUTRO ARQUIVO, RETIREI DAQUI POIS PRECISAVA RODAR O PROGRAMA PARA TESTAR 
+	

@@ -52,4 +52,17 @@
  	move $s4, $v0  		#guarda em s4 o resultado da função 
  	addi $sp , $sp , 4      # Ajusta a pilha
  	
-			
+ 	
+ 	#TROUXE ESSA FUNÇÃO DO OUTRO ARQUIVO 
+	ordenaVetor:
+		move $t0, $a0 #vetor[]
+		move $t1, $a1 # int n
+		li $t2, 0 # i = 0
+		addi $t3, $t2, 1 # j = i + 1
+		addi $t4, $t3, -1 # n - 1
+		LACO1: bge, $t2, $t4, proxIf
+			move $t5, $t2
+			LACO2: bge $t3, $t1, fimLoops
+				
+			addi $t2, $t2, 1
+			j LACO1	
