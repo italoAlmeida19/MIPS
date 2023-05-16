@@ -7,6 +7,12 @@
  	.align 2 	#alinha palavra na posi��o correta 
  	.space 80	#array de 20 inteiros
  .text 
+ 	#Integrantes do grupo
+ 	#ALEXANDRE ROCHA DA SILVA MOREIRA - 202176001
+	#ÍTALO DE ALMEIDA RIBEIRO 	  - 202176009
+	#RODRIGO SOARES DE ASSIS 	  - 202176027
+ 	
+ 	
  	.main:  
  	 	
  	lw $s7, size #tamanho de myArray
