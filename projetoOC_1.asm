@@ -4,12 +4,9 @@
  	newSpace: .asciiz " "
  	soma: .asciiz "Soma: "
  	myArray:
- 	.align 2 	#alinha palavra na posição correta 
+ 	.align 2 	#alinha palavra na posiï¿½ï¿½o correta 
  	.space 80	#array de 20 inteiros
  .text 
- 	#AVISO AVISO AVISO
- 	#O MAIN NAO ESTÁ PRONTO CORRETAMENTE, ELE ESTÁ FEITO DE FORMA QUE RODE PARA TESTAR AS FUNÇÕES
- 	
  	.main:  
  	 	
  	lw $s7, size #tamanho de myArray
@@ -17,35 +14,35 @@
  	la, $s0, myArray
  	 	
  	#CHAMA INICIALIZAVETOR
- 	move $a0, $s0 #endereço primeira posição vetor
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
  	move $a1, $s7 #move para o paramentro o tam do vetor
- 	move $a2, $t1 #move o valor passado para a função
+ 	move $a2, $t1 #move o valor passado para a funï¿½ï¿½o
  	jal inicializaVetor
  	move $s1, $v0 #guarda o valor da soma
  	 
  	#CHAMA IMPRIME VETOR
- 	move $a0, $s0 #endereço primeira posição vetor
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
  	move $a1, $s7 #tam
  	jal imprime
  	 
 	#CHAMA ORDENA VETOR
- 	move $a0, $s0 #endereço primeira posição vetor
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
  	move $a1, $s7 #tam
  	jal ordenaVetor
  	 
  	#CHAMA IMPRIME VETOR
- 	move $a0, $s0 #endereço primeira posição vetor
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
  	move $a1, $s7 #tam
  	jal imprime
  	 
  	#CHAMA ZERAVETOR
- 	move $a0, $s0 #endereço primeira posição vetor
- 	li $t0, 80           #local da ultima posição do vetor
- 	la $a1, myArray($t0)     #endereço para a ultima posição 
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
+ 	li $t0, 80           #local da ultima posiï¿½ï¿½o do vetor
+ 	la $a1, myArray($t0)     #endereï¿½o para a ultima posiï¿½ï¿½o 
  	jal zeraVetor
  	 
  	#CHAMA IMPRIME VETOR
- 	move $a0, $s0 #endereço primeira posição vetor
+ 	move $a0, $s0 #endereï¿½o primeira posiï¿½ï¿½o vetor
  	move $a1, $s7 #tam
  	jal imprime
  	 
@@ -62,8 +59,8 @@
  	li $v0, 10 
  	syscall 
 
- 	imprime:  #função de imprime vetor
- 		move $t0, $a0  #Coloca o endereço do vetor que veio por parâmetro dentro de $t0
+ 	imprime:  #funï¿½ï¿½o de imprime vetor
+ 		move $t0, $a0  #Coloca o endereï¿½o do vetor que veio por parï¿½metro dentro de $t0
  		li  $t1, 0     # i = 0 dentro de $t1
  		sll $t2, $a1, 2  #Coloca o tamanho do vetor em bytes dentro de $t2
  			while:
@@ -71,11 +68,11 @@
 				lw $a0, 0($t0)          #Coloca o valor de vet[i] dentro de a0 p imprimir 
 				syscall          	#imprime 
 				
-				li $v0, 4       	# Espaço entre elementos
+				li $v0, 4       	# Espaï¿½o entre elementos
 				la $a0, newSpace        
 				syscall
 				
-				addi $t0, $t0, 4      #anda 1 posição no vetor
+				addi $t0, $t0, 4      #anda 1 posiï¿½ï¿½o no vetor
 				addi $t1, $t1, 4      #anda a variavel de controle 
 				
 				blt $t1, $t2, while   #se i > tamBytesVetor quebra o loop
@@ -87,22 +84,22 @@
 				jr $ra   	      #Volta pra quem chamou
 	
 	
-	zeraVetor:  #função de zerar vetor
-		move $t0, $a0  #guada primeira posição endereço
-		move $t1, $a1  #guarda ultima posição endereço
+	zeraVetor:  #funï¿½ï¿½o de zerar vetor
+		move $t0, $a0  #guada primeira posiï¿½ï¿½o endereï¿½o
+		move $t1, $a1  #guarda ultima posiï¿½ï¿½o endereï¿½o
 		whileZera:
-			bgt $t0, $t1, fim  #posicao inicial > posição final ? caso afirmativo pular para fim 
+			bgt $t0, $t1, fim  #posicao inicial > posiï¿½ï¿½o final ? caso afirmativo pular para fim 
 			sw $zero, 0($t0)   #coloca 0 na vet[atual]
-			addi $t0, $t0, 4   #avança para proximo elemento do vetor 
+			addi $t0, $t0, 4   #avanï¿½a para proximo elemento do vetor 
 			j whileZera	   #pula para whileZera
 		fim:
 		jr $ra		           #Volta pra quem chamou
 	
 	
 	numeroAleatorio:
-		lw  $t3, 0($sp)  #acessa o 4 parâmetro na pilha
+		lw  $t3, 0($sp)  #acessa o 4 parï¿½metro na pilha
 		
-		mul $t0, $a0, $a1 #realiza todas as operações
+		mul $t0, $a0, $a1 #realiza todas as operaï¿½ï¿½es
 		add $t1, $t0, $a2
 		div $t1, $a3
 		mfhi $t2
@@ -125,7 +122,7 @@
 		
 
 	inicializaVetor:
-		#Salvo na pilha todos os S que irei usar na função e o ra
+		#Salvo na pilha todos os S que irei usar na funï¿½ï¿½o e o ra
 		addi $sp, $sp, -16	
 		sw $s0, 0($sp)
 		sw $s1, 4($sp) 
@@ -138,7 +135,7 @@
 		
 		bgt, $s2, $zero, prox	#verifica se tamanho >=0
 		
-		#Recupera informações da pilha para poder retornar para quem chamou 
+		#Recupera informaï¿½ï¿½es da pilha para poder retornar para quem chamou 
 		lw $s0, 0($sp)
 		lw $s1, 4($sp) 
 		lw $s2, 8($sp) 
@@ -163,15 +160,15 @@
 			addi $sp , $sp , 4 #corrige pilha 
 			
 			
-			#coloca o numero aleatorio na ultila posição do vetor 
+			#coloca o numero aleatorio na ultila posiï¿½ï¿½o do vetor 
 			addi $s2,$s2, -1  #n - 1 
 			sll $t4, $s2, 2   #n *4
-			add $s1, $s1, $t4 #pulo pra ultima posição do vetor disponivel
-			sw $s0, 0($s1)    #coloco o resultado do a0 nessa posição 
+			add $s1, $s1, $t4 #pulo pra ultima posiï¿½ï¿½o do vetor disponivel
+			sw $s0, 0($s1)    #coloco o resultado do a0 nessa posiï¿½ï¿½o 
 			sub  $s1, $s1, $t4 #volto o ponteiro do vetor pro inicio
 			
 			
-			#Carrega parametros para chamar denovo a funçaõ
+			#Carrega parametros para chamar denovo a funï¿½aï¿½
 			move $a0, $s1  #vetor
 			move $a1, $s2  #tamanho n
 			move $a2, $s0  #numero aleatorio gerado nessa chamada 
@@ -180,10 +177,10 @@
 			jal inicializaVetor 
 			
 			move $t5 , $v0  #resultado da recursao 
-			add $v0, $s0, $t5   #soma numero aleatorio dessa chamada + resultado da recursão
+			add $v0, $s0, $t5   #soma numero aleatorio dessa chamada + resultado da recursï¿½o
 
 			
-			#Recupera informações da pilha para poder retornar para quem chamou 
+			#Recupera informaï¿½ï¿½es da pilha para poder retornar para quem chamou 
 			lw $s0, 0($sp)
 			lw $s1, 4($sp) 
 			lw $s2, 8($sp) 
