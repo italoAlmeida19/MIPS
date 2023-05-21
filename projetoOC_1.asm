@@ -44,7 +44,8 @@
  	#CHAMA ZERAVETOR
  	move $a0, $s0 #endere�o primeira posi��o vetor
  	li $t0, 80           #local da ultima posi��o do vetor
- 	la $a1, myArray($t0)     #endere�o para a ultima posi��o 
+ 	addu $t1, $s0, $t0
+ 	la $a1, ($t1)     #endere�o para a ultima posi��o 
  	jal zeraVetor
  	 
  	#CHAMA IMPRIME VETOR
